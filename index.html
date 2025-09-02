@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -208,4 +209,216 @@
 
   <script src="script.js"></script>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora de Macronutrientes Pro</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Chart.js para la gráfica de progreso -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+  <button id="theme-toggle" class="theme-btn" title="Tema">
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <div class="container">
+    <div class="header">
+      <i class="fas fa-calculator"></i>
+      <h1>Calculadora de Macronutrientes</h1>
+      <p>Calcula tus requerimientos y lleva tu progreso</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="calc-tab"><i class="fas fa-calculator"></i> Calculadora</button>
+      <button class="tab-btn" data-tab="progreso-tab"><i class="fas fa-chart-line"></i> Progreso</button>
+      <button class="tab-btn" data-tab="cuenta-tab"><i class="fas fa-user"></i> Cuenta</button>
+    </div>
+
+    <!-- CALCULADORA -->
+    <div id="calc-tab" class="tab-content active">
+      <div class="form-card">
+        <div class="input-group">
+          <label><i class="fas fa-venus-mars"></i> Sexo:</label>
+          <select id="sexo">
+            <option value="hombre">👨 Hombre</option>
+            <option value="mujer">👩 Mujer</option>
+          </select>
+        </div>
+
+        <div class="input-row">
+          <div class="input-group">
+            <label><i class="fas fa-weight"></i> Peso (kg):</label>
+            <input type="number" id="peso" placeholder="Ej: 70" required step="0.01" min="20" max="400"/>
+          </div>
+          <div class="input-group">
+            <label><i class="fas fa-ruler-vertical"></i> Altura (cm):</label>
+            <input type="number" id="altura" placeholder="Ej: 175" required step="0.5" min="120" max="240"/>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label><i class="fas fa-birthday-cake"></i> Edad (años):</label>
+          <input type="number" id="edad" placeholder="Ej: 25" required min="10" max="100"/>
+        </div>
+
+        <div class="input-group">
+          <label><i class="fas fa-running"></i> Nivel de Actividad:</label>
+          <select id="actividad">
+            <option value="1.2">🛋️ Sedentario (poco o nada de ejercicio)</option>
+            <option value="1.375">🚶 Ligera actividad (1-3 días/sem)</option>
+            <option value="1.55">🏃 Moderada (3-5 días/sem)</option>
+            <option value="1.725">💪 Alta (6-7 días/sem)</option>
+            <option value="1.9">🔥 Muy alta (trabajo físico + deporte)</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label><i class="fas fa-target"></i> Objetivo:</label>
+          <div class="objetivo-buttons">
+            <button type="button" class="objetivo-btn" data-objetivo="mantenimiento">
+              <i class="fas fa-balance-scale"></i>
+              <span>Mantenimiento</span>
+              <small>Mantener peso actual</small>
+            </button>
+            <button type="button" class="objetivo-btn" data-objetivo="volumen">
+              <i class="fas fa-arrow-up"></i>
+              <span>Volumen</span>
+              <small>Ganar músculo (+15%)</small>
+            </button>
+            <button type="button" class="objetivo-btn active" data-objetivo="definicion">
+              <i class="fas fa-arrow-down"></i>
+              <span>Definición</span>
+              <small>Perder grasa (-20%)</small>
+            </button>
+          </div>
+        </div>
+
+        <button class="calculate-btn" onclick="calcular()">
+          <i class="fas fa-calculator"></i>
+          Calcular Macronutrientes
+        </button>
+
+        <div class="results" id="resultados"></div>
+      </div>
+    </div>
+
+    <!-- PROGRESO -->
+    <div id="progreso-tab" class="tab-content">
+      <div class="form-card">
+        <div id="estado-cuenta" class="info-callout">
+          <i class="fas fa-user-lock"></i>
+          <span>Inicia sesión para guardar y sincronizar tu progreso.</span>
+        </div>
+
+        <div class="input-row">
+          <div class="input-group">
+            <label><i class="fas fa-calendar"></i> Fecha del registro:</label>
+            <input type="date" id="fechaProgreso" />
+          </div>
+          <div class="input-group">
+            <label><i class="fas fa-weight-scale"></i> Peso (kg):</label>
+            <input type="number" id="pesoProgreso" placeholder="Ej: 70.20" step="0.01" min="20" max="400"/>
+          </div>
+        </div>
+
+        <button id="btnAgregarProgreso" class="calculate-btn" disabled>
+          <i class="fas fa-save"></i> Guardar registro
+        </button>
+
+        <div id="mensaje-ritmo" class="notice" style="display:none;"></div>
+
+        <div class="chart-card">
+          <h3><i class="fas fa-chart-area"></i> Progreso de peso</h3>
+          <canvas id="pesoChart" height="220"></canvas>
+        </div>
+
+        <div class="input-row" style="margin-top: 20px;">
+          <div class="input-group">
+            <label><i class="fas fa-calendar-check"></i> Estimar peso para la fecha:</label>
+            <input type="date" id="fechaEstimacion" />
+          </div>
+          <div class="input-group">
+            <label><i class="fas fa-bullseye"></i> Estimación:</label>
+            <input type="text" id="resultadoEstimacion" readonly placeholder="—"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUENTA -->
+    <div id="cuenta-tab" class="tab-content">
+      <div class="form-card">
+        <div id="cuentaNoActiva">
+          <div class="input-row">
+            <div class="input-group">
+              <h3><i class="fas fa-user-plus"></i> Registrarse</h3>
+              <label>Nombre</label>
+              <input type="text" id="reg_nombre" placeholder="Tu nombre"/>
+              <label>Email</label>
+              <input type="email" id="reg_email" placeholder="ejemplo@correo.com"/>
+              <label>Contraseña</label>
+              <input type="password" id="reg_pass" placeholder="Mín. 6 caracteres"/>
+              <button id="btnRegistrar" class="calculate-btn" style="margin-top:12px;">
+                <i class="fas fa-user-check"></i> Crear cuenta
+              </button>
+            </div>
+
+            <div class="input-group">
+              <h3><i class="fas fa-right-to-bracket"></i> Iniciar sesión</h3>
+              <label>Email</label>
+              <input type="email" id="log_email" placeholder="ejemplo@correo.com"/>
+              <label>Contraseña</label>
+              <input type="password" id="log_pass" placeholder="••••••••"/>
+              <button id="btnLogin" class="calculate-btn" style="margin-top:12px;">
+                <i class="fas fa-door-open"></i> Entrar
+              </button>
+            </div>
+          </div>
+          <small class="muted">Nota: versión demo con cuentas locales (almacenadas en este navegador). Para producción: Firebase/Supabase.</small>
+        </div>
+
+        <div id="cuentaActiva" style="display:none;">
+          <div class="account-header">
+            <div>
+              <i class="fas fa-circle-user"></i> <strong id="cuentaNombre"></strong>
+              <div class="muted" id="cuentaEmail"></div>
+            </div>
+            <button id="btnLogout" class="secondary-btn"><i class="fas fa-right-from-bracket"></i> Cerrar sesión</button>
+          </div>
+
+          <div class="input-row" style="margin-top: 10px;">
+            <div class="input-group">
+              <label>Sexo</label>
+              <select id="perfil_sexo">
+                <option value="hombre">Hombre</option>
+                <option value="mujer">Mujer</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Altura (cm)</label>
+              <input id="perfil_altura" type="number" step="0.5"/>
+            </div>
+            <div class="input-group">
+              <label>Edad</label>
+              <input id="perfil_edad" type="number" min="10" max="100"/>
+            </div>
+          </div>
+
+          <button id="btnGuardarPerfil" class="calculate-btn"><i class="fas fa-save"></i> Guardar perfil</button>
+          <small class="muted">Tu último peso registrado se usará para la calculadora automáticamente.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+>>>>>>> ea43463b6b40ae275018cb16bb9a745e13b249b4
 </html>
